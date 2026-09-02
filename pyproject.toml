@@ -1,0 +1,16 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "ndc-lookup"
+version = "0.1.0"
+description = "Look up and validate National Drug Code entries against the public openFDA directory"
+requires-python = ">=3.11"
+dependencies = ["requests>=2.31"]
+
+[project.scripts]
+ndc-lookup = "ndc_lookup.__main__:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]

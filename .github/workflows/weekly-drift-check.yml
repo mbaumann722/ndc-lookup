@@ -1,0 +1,47 @@
+name: Weekly openFDA smoke test
+
+# This is the "automate a recurring manual check" workflow — the GitHub
+# equivalent of a cron job. It runs on a schedule (no push required) and
+# opens an Issue automatically if something's wrong, so you find out from
+# your inbox instead of by remembering to check.
+#
+# Real-world equivalent: a scheduled job that re-validates your batch of
+# tracked NDCs weekly and flags any that flipped from ACTIVE to DISCONTINUED.
+
+on:
+  schedule:
+    - cron: "0 13 * * 1"  # Mondays at 13:00 UTC
+  workflow_dispatch: {}     # lets you also trigger it manually from the Actions tab
+
+jobs:
+  smoke-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install -e .
+
+      - name: Check a known-good NDC against openFDA
+        id: check
+        run: python -m ndc_lookup check 0069-3060-04
+
+      - name: Open an issue if the check failed
+        if: failure()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: "Weekly openFDA smoke test failed",
+              body: "The scheduled check against openFDA failed — see the run log:\n" + context.payload.repository.html_url + "/actions"
+            })
