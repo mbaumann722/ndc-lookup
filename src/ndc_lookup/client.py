@@ -58,7 +58,10 @@ def lookup_ndc(ndc: str, *, timeout: float = 10.0) -> Optional[NDCRecord]:
     ndc = normalize_ndc(ndc)
     resp = requests.get(
         OPENFDA_NDC_ENDPOINT,
-        params={"search": f'product_ndc:"{ndc}"', "limit": 1},
+        # A full 3-segment NDC (labeler-product-package) is a *package* NDC.
+        # openFDA stores it under packaging.package_ndc; the top-level
+        # product_ndc field holds only the first two segments (e.g. 0002-1433).
+        params={"search": f'packaging.package_ndc:"{ndc}"', "limit": 1},
         timeout=timeout,
     )
     if resp.status_code == 404:
