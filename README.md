@@ -11,7 +11,7 @@ logic or data from any employer.
 
 ## What it does
 
-- **Single lookup** — `ndc-lookup check 0069-3060-04` returns product name,
+- **Single lookup** — `ndc-lookup check 0002-1433-80` returns product name,
   labeler, marketing category, and marketing start/end dates from openFDA.
 - **Batch validation** — `ndc-lookup batch codes.csv` reads a column of NDC
   codes and writes a report: `ACTIVE`, `DISCONTINUED` (has an end date in the
@@ -45,7 +45,7 @@ pip install -r requirements.txt
 ## Usage
 
 ```bash
-python -m ndc_lookup check 0069-3060-04
+python -m ndc_lookup check 0002-1433-80
 python -m ndc_lookup batch data/sample_codes.csv
 ```
 

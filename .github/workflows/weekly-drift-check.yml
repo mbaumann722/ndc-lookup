@@ -32,7 +32,7 @@ jobs:
 
       - name: Check a known-good NDC against openFDA
         id: check
-        run: python -m ndc_lookup check 0069-3060-04
+        run: python -m ndc_lookup check 0002-1433-80
 
       - name: Open an issue if the check failed
         if: failure()
